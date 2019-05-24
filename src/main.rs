@@ -1,7 +1,6 @@
 extern crate clap;
 
 use clap::{App, Arg};
-use std::char;
 use std::io::{prelude::*, BufReader};
 use std::fs::File;
 use std::collections::HashMap;
@@ -31,23 +30,20 @@ fn main() {
     let matches = app.get_matches();
 
     // 読み込み
-    let mut s = String::new();
+    let mut s = Vec::new();
     let mut f = BufReader::new(File::open(&matches.value_of("input").unwrap()).expect("file not found"));
-    f.read_to_string(&mut s).unwrap();
+    f.read_to_end(&mut s).expect("Unable to read");
     let start = Instant::now();
 
-
-    // index access のために文字列をベクタ化．文字はusizeにキャスト．
-    let s: Vec<char> = s.chars().collect();
 
     // preprocessing
     // 終端記号を変数に置換して，文字列を配列に格納
     // each tuple is (0: char, 1: prev, 2: next)
     let mut a: Vec<(Option<usize>, Option<usize>, Option<usize>)> = vec![(None, None, None); s.len()]; 
-    let mut z: Vec<char> = Vec::new();
+    let mut z: Vec<u8> = Vec::new();
     //{{{
     {
-        let mut d: HashMap<char, usize> = HashMap::new();
+        let mut d: HashMap<u8, usize> = HashMap::new();
         let mut x: usize = 0;
         for i in 0..s.len() {
             if d.contains_key(&s[i]) {
