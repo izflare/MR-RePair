@@ -9,6 +9,8 @@ This is an implementation of MR-RePair, which is proposed in
 Note that this implementation is not used for the experiments of the paper
 (see https://github.com/tkida/MR-Repair).
 
+The constructed grammar is encoded by using post-order partial parse tree (POPPT) for now.
+
 ### Download
 
 ```
@@ -40,5 +42,9 @@ FLAGS:
 OPTIONS:
     -i, --input <input>    Input sourse text file
     -m, --min <minfreq>    Set minimum frequency of pairing operation (default: 2)
+
+OUTPUTS:
+    <input>.mrrp    Compressed file
+    <input>.d       Decompressed file
 ```
 
