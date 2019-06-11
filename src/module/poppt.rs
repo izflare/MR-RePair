@@ -33,7 +33,6 @@ impl POPPT {
             else {right_side.push(stack.pop().unwrap());}
         }
         g.sequence = vec![var - 1];
-
     }
 }
 
