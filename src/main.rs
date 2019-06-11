@@ -58,14 +58,9 @@ fn main() {
         let start = Instant::now();
 
         let minfreq = 
-                std::cmp::max(2, match matches.value_of("minfreq") {Some(x) => (*x).parse::<usize>().unwrap(), None => 3,});
+                std::cmp::max(2, match matches.value_of("minfreq") {Some(x) => (*x).parse::<usize>().unwrap(), None => 2,});
         let mut g: Grammar = Grammar::new();
-        comp::compression(&s, &mut g, minfreq, matches.is_present("sort"));
-
-        // // check
-        // let mut w: Vec<u8> = Vec::new();
-        // g.derive(&mut w);
-        // assert_eq!(w, s);
+        comp::compress(&s, &mut g, minfreq, matches.is_present("sort"));
 
         let end = start.elapsed();
         println!("[Result: grammar construction]");
@@ -78,19 +73,19 @@ fn main() {
         println!("{}.{:03} sec elapsed", end.as_secs(), end.subsec_nanos()/1_000_000);
         //}}}
 
-        // // encode
-        // let mut bv: BitVec = BitVec::new();
-        // encode::encode(&g, &mut bv);
-        //
-        // // write
-        // let mut f = BufWriter::new(File::create(matches.value_of("input").unwrap().to_owned()+".rp").unwrap());
-        // f.write(&bv.to_bytes()).unwrap();
-        //
-        // println!("[Result: compression]");
-        // //{{{
-        // println!("Input data        : {:?} [bytes]", s.len());
-        // println!("Compressed data   : {:?} [bytes]", bv.len() / 8 + if bv.len() % 8 > 0 {1} else {0});
-        // println!("Compression ratio : {:.3} [%]", 100.0 * bv.len() as f64 / 8.0 / s.len() as f64);
+        // encode
+        let mut bv: BitVec = BitVec::new();
+        encode::encode(&g, &mut bv);
+
+        // write
+        let mut f = BufWriter::new(File::create(matches.value_of("input").unwrap().to_owned()+".mrrp").unwrap());
+        f.write(&bv.to_bytes()).unwrap();
+
+        println!("[Result: compression]");
+        println!("Input data        : {:?} [bytes]", s.len());
+        println!("Compressed data   : {:?} [bytes]", bv.len() / 8 + if bv.len() % 8 > 0 {1} else {0});
+        println!("Compression ratio : {:.3} [%]", 100.0 * bv.len() as f64 / 8.0 / s.len() as f64);
+        //{{{
         if matches.is_present("print") {
             println!("\n[Grammar detail]");
             println!("Alphabet   :\n {:?}", g.terminal);
@@ -101,22 +96,22 @@ fn main() {
 
     }
 
-    // // decompression
-    // else if matches.is_present("d") {
-    //     let start = Instant::now();
-    //
-    //     let bv: BitVec = BitVec::from_bytes(&s);
-    //     let mut u: Vec<u8> = Vec::new();
-    //     comp::decompression(&bv, &mut u);
-    //
-    //     let end = start.elapsed();
-    //     println!("[Result: decompression]");
-    //     println!("{}.{:03} sec elapsed", end.as_secs(), end.subsec_nanos()/1_000_000);
-    //
-    //     // write
-    //     let mut f = BufWriter::new(File::create(matches.value_of("input").unwrap().to_owned()+".d").unwrap());
-    //     f.write(&u).unwrap();
-    // }
+    // decompression
+    else if matches.is_present("d") {
+        let start = Instant::now();
+
+        let bv: BitVec = BitVec::from_bytes(&s);
+        let mut u: Vec<u8> = Vec::new();
+        comp::decompress(&bv, &mut u);
+
+        let end = start.elapsed();
+        println!("[Result: decompression]");
+        println!("{}.{:03} sec elapsed", end.as_secs(), end.subsec_nanos()/1_000_000);
+
+        // write
+        let mut f = BufWriter::new(File::create(matches.value_of("input").unwrap().to_owned()+".d").unwrap());
+        f.write(&u).unwrap();
+    }
     else {
         panic!("mdoe error");
     }
