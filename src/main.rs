@@ -18,8 +18,8 @@ fn main() {
         //{{{
         .version(crate_version!())
         .author(crate_authors!())
-        .args_from_usage("-c 'compression mode'
-                         -d 'decompression mode'")
+        .args_from_usage("-c 'Compression mode'
+                         -d 'Decompression mode'")
         .group(ArgGroup::with_name("mode")
             .args(&["c", "d"]).required(true))
         .arg(Arg::with_name("input")
@@ -30,7 +30,7 @@ fn main() {
             .required(true)                     
         )
         .arg(Arg::with_name("minfreq")
-            .help("Set minimum frequency of pairing operation (default: 3)")
+            .help("Set minimum frequency of pairing operation (default: 2)")
             .short("m")
             .long("min")
             .takes_value(true)
