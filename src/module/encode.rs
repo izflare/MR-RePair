@@ -6,6 +6,7 @@ use std::time::Instant;
 use std::cmp::{min, max};
 use strlib::delta;
 use super::{cfg::*};
+use super::{poppt::*};
 
 pub fn encode(g: &Grammar, bv: &mut BitVec) -> () {
 
