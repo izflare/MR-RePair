@@ -10,6 +10,7 @@ use bit_vec::BitVec;
 use mrrp::module::encode;
 use mrrp::module::comp;
 use mrrp::module::{cfg::*};
+use mrrp::module::{poppt::*};
 
 fn main() {
 
@@ -62,10 +63,21 @@ fn main() {
         let mut g: Grammar = Grammar::new();
         comp::compression(&s, &mut g, minfreq, matches.is_present("sort"));
 
-        // // check
-        // let mut w: Vec<u8> = Vec::new();
-        // g.derive(&mut w);
-        // assert_eq!(w, s);
+        // check
+        println!("go to check");
+        let mut p: POPPT = POPPT::new();
+        p.bit = BitVec::from_bytes(&[0b11001111, 0b00010011]);
+        p.bit.push(false);
+        p.bit.push(false);
+        p.bit.push(true);
+        p.label = vec![1,1,2,1,2,5];
+        let mut gram = Grammar::new();
+        gram.terminal = vec![97, 98];
+        p.to_grammar(&mut gram);
+        println!("{:?}", gram);
+        let mut w: Vec<u8> = Vec::new();
+        gram.derive(&mut w);
+        println!("{:?}", w);
 
         let end = start.elapsed();
         println!("[Result: grammar construction]");
