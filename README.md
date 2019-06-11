@@ -7,7 +7,8 @@ This method is proposed in
 
 > I. Furuya, T. Takagi, Y. Nakashima, S. Inenaga, H. Bannai and T. Kida: _MR-RePair: Grammar Compression based on Maximal Repeats._ DCC 2019, pp.508-517.
 
-Note that, instead of this implementation, https://github.com/tkida/MR-Repair is used for the experiments of the paper.
+Note that this implementation is not used for the experiments of the paper
+(see https://github.com/tkida/MR-Repair).
 
 ### Download
 
