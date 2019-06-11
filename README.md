@@ -2,8 +2,7 @@
 
 ### Description
 
-This is an implementation of MR-RePair, a variant of RePair.
-This method is proposed in
+This is an implementation of MR-RePair, which is proposed in
 
 > I. Furuya, T. Takagi, Y. Nakashima, S. Inenaga, H. Bannai and T. Kida: _MR-RePair: Grammar Compression based on Maximal Repeats._ DCC 2019, pp.508-517.
 
@@ -29,7 +28,6 @@ cargo build --release
 
 ```
 USAGE:
-    cd target/release
     ./target/release/mrrp [FLAGS] [OPTIONS] --input <input> <-c|-d>
 
 FLAGS:
