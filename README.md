@@ -39,6 +39,6 @@ FLAGS:
 
 OPTIONS:
     -i, --input <input>    Input sourse text file
-    -m, --min <minfreq>    Set minimum frequency of pairing operation (default: 3)
+    -m, --min <minfreq>    Set minimum frequency of pairing operation (default: 2)
 ```
 
