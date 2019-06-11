@@ -1,8 +1,10 @@
 [package]
 name = "mrrp"
-version = "0.1.0"
+version = "0.0.2"
 authors = ["flare"]
 edition = "2018"
 
 [dependencies]
 clap = "2.33.0"
+bit-vec = "0.5.0"
+strlib = {git = "https://github.com/izflare/strlib"}
