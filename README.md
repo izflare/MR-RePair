@@ -1,15 +1,13 @@
-# MR-RePair Grammar Compressor
+## MR-RePair
 
 ### Description
 
-This is an implementation of MR-RePair, which is a variant of RePair (about RePair, see https://github.com/izflare/RePair).  
-MR-RePair is proposed in
+This is an implementation of MR-RePair, a variant of RePair.
+This method is proposed in
 
 > I. Furuya, T. Takagi, Y. Nakashima, S. Inenaga, H. Bannai and T. Kida: _MR-RePair: Grammar Compression based on Maximal Repeats._ DCC 2019, pp.508-517.
 
-Note that this implementation is not used in experiments of above paper.  
-This code constructs only a grammar.
-Encoding process is unimplemented yet.
+Note that, instead of this implementation, https://github.com/tkida/MR-Repair is used for the experiments of the paper.
 
 ### Download
 
@@ -19,8 +17,7 @@ git clone https://github.com/izflare/MR-RePair.git
 
 ### Compile
 
-This code has been tested under linux compiling with rust (cargo) ver 1.33.0.  
-After download the repository, 
+This code has been tested under linux compiling with rust (cargo) ver 1.34.0.  
 
 ```
 cd MR-RePair
@@ -29,14 +26,20 @@ cargo build --release
 
 ### Run
 
-After compiling,
-
 ```
-cd target/release
-./mrrp --input <input> [--print]
-```
+USAGE:
+    cd target/release
+    ./target/release/mrrp [FLAGS] [OPTIONS] --input <input> <-c|-d>
 
-`<input>` is your input text data file.  
-Size of constructed grammar and elapsed time for running will be displayed.  
-If you execute with `--print` option, constructed grammar will also be displayed.
+FLAGS:
+    -c               Compression mode
+    -d               Decompression mode
+    -h, --help       Prints help information
+    -p, --print      Print the detail of constructed grammar
+    -V, --version    Prints version information
+
+OPTIONS:
+    -i, --input <input>    Input sourse text file
+    -m, --min <minfreq>    Set minimum frequency of pairing operation (default: 3)
+```
 
