@@ -182,6 +182,11 @@ pub fn compress(s: &Vec<u8>, g: &mut Grammar, minfreq: usize, sorting: bool) -> 
                             (*rgh_rec).loc = il;
                             q.enqueue(rgh_rec);
                         }
+                        else {
+                            if let Some (true_prev) = a[(*rgh_rec).loc].next {
+                                a[true_prev].prev = Some(il);
+                            }
+                        }
                     }
                     else {
                         let rgh_rec = Box::into_raw(Box::new(Record {loc: il, freq: 1, prev: None, next: None}));
