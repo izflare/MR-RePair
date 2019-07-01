@@ -2,13 +2,13 @@
 extern crate clap;
 extern crate bit_vec;
 
-use clap::{App, Arg, ArgGroup};
+use clap::{App, Arg, ArgGroup, AppSettings};
 use std::io::{prelude::*, BufReader, BufWriter};
 use std::fs::File;
 use std::time::Instant;
 use bit_vec::BitVec;
 use mrrp::module::encode;
-use mrrp::module::comp;
+use mrrp::module::compress;
 use mrrp::module::{cfg::*};
 
 fn main() {
@@ -18,33 +18,16 @@ fn main() {
         //{{{
         .version(crate_version!())
         .author(crate_authors!())
+        .setting(AppSettings::DeriveDisplayOrder)
         .args_from_usage("-c 'Compression mode'
                          -d 'Decompression mode'")
-        .group(ArgGroup::with_name("mode")
-            .args(&["c", "d"]).required(true))
-        .arg(Arg::with_name("input")
-            .help("Input sourse text file")
-            .short("i")
-            .long("input")
-            .takes_value(true)                  
-            .required(true)                     
-        )
-        .arg(Arg::with_name("minfreq")
-            .help("Set minimum frequency of pairing operation (default: 2)")
-            .short("m")
-            .long("min")
-            .takes_value(true)
-        )
-        .arg(Arg::with_name("sort")
-            .help("Enable bigram sorting")
-            .short("s")
-            .long("sort")
-        )
-        .arg(Arg::with_name("print")
-            .help("Print the detail of constructed grammar")
-            .short("p")
-            .long("print")
-        );
+        .group(ArgGroup::with_name("mode").args(&["c", "d"]).required(true))
+        .arg(Arg::from_usage("-i --input [FILE] 'Input sourse file'").required(true))
+        .arg(Arg::from_usage("-m --minfreq [INTEGER] 'Sets minimum frequency of pairing operation'").default_value("2"))
+        .arg(Arg::from_usage("-e --encode [MODE] 'Sets encoding mode'")
+             .possible_values(&["u32bits", "fixed", "POPPT"])
+             .default_value("POPPT"))
+        .arg(Arg::from_usage("-p --print 'Prints the detail of constructed grammar'"));
         //}}}
     let matches = app.get_matches();
 
@@ -59,8 +42,10 @@ fn main() {
 
         let minfreq = 
                 std::cmp::max(2, match matches.value_of("minfreq") {Some(x) => (*x).parse::<usize>().unwrap(), None => 2,});
+        let mode = matches.value_of("encode").unwrap();
+
         let mut g: Grammar = Grammar::new();
-        comp::compress(&s, &mut g, minfreq, matches.is_present("sort"));
+        compress::compress(&s, &mut g, minfreq, matches.is_present("sort"));
 
         let end = start.elapsed();
         println!("[Result: grammar construction]");
@@ -75,7 +60,7 @@ fn main() {
 
         // encode
         let mut bv: BitVec = BitVec::new();
-        encode::encode(&g, &mut bv);
+        encode::encode(&g, mode, &mut bv);
 
         // write
         let mut f = BufWriter::new(File::create(matches.value_of("input").unwrap().to_owned()+".mrrp").unwrap());
@@ -102,7 +87,7 @@ fn main() {
 
         let bv: BitVec = BitVec::from_bytes(&s);
         let mut u: Vec<u8> = Vec::new();
-        comp::decompress(&bv, &mut u);
+        compress::decompress(&bv, &mut u);
 
         let end = start.elapsed();
         println!("[Result: decompression]");
