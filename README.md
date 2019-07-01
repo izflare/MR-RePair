@@ -35,16 +35,16 @@ USAGE:
 FLAGS:
     -c               Compression mode
     -d               Decompression mode
+    -p, --print      Prints the detail of constructed grammar
     -h, --help       Prints help information
-    -p, --print      Print the detail of constructed grammar
     -V, --version    Prints version information
 
 OPTIONS:
-    -i, --input <input>    Input sourse text file
-    -m, --min <minfreq>    Set minimum frequency of pairing operation (default: 2)
-
-OUTPUTS:
-    <input>.mrrp    Compressed file
-    <input>.d       Decompressed file
+    -i, --input <FILE>         Input sourse file
+    -m, --minfreq <INTEGER>    Sets minimum frequency of pairing operation [default: 2]
+    -e, --encode <MODE>        Sets encoding mode [default: POPPT]  
+	                           [possible values: u32bits, fixed, POPPT]
 ```
 
+The command with `-c` flag produces the compressed file `<FILE>.mrrp`.  
+The command with `-d` flag produces the decompressed file `<FILE>.d`.
