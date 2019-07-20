@@ -1,13 +1,14 @@
 extern crate bit_vec;
 extern crate strlib;
 
-pub mod u32bits;
-pub mod fble;
-pub mod poppt;
+pub mod text_32bit;
+pub mod text_fble;
+pub mod poppt_ible;
+pub mod poppt_pge;
 
 use bit_vec::BitVec;
 use std::time::Instant;
-use strlib::fixed;
+use strlib::fble;
 use crate::module::{cfg::*};
 use super::encode;
 
@@ -18,17 +19,25 @@ pub fn encode(g: &Grammar, mode: &str, bv: &mut BitVec) -> () {
 
     let start = Instant::now();
 
-    if mode == "u32bits" {
-        fixed::to_bv(0, 8, bv);
-        encode::u32bits::encode(g, bv);
+    if mode == "32bit" {
+        fble::to_bv(0, 8, bv);
+        encode::text_32bit::encode(g, bv);
     }
-    else if mode == "fixed" {
-        fixed::to_bv(1, 8, bv);
-        encode::fble::encode(g, bv);
+    else if mode == "FBLE" {
+        fble::to_bv(1, 8, bv);
+        encode::text_fble::encode(g, bv);
     }
-    else if mode == "POPPT" {
-        fixed::to_bv(2, 8, bv);
-        encode::poppt::encode(g, bv);
+    else if mode == "Huffman_coding" {
+        fble::to_bv(2, 8, bv);
+        // encode::text_fble::encode(g, bv);
+    }
+    else if mode == "POPPT+IBLE" {
+        fble::to_bv(3, 8, bv);
+        encode::poppt_ible::encode(g, bv);
+    }
+    else if mode == "POPPT+PGE" {
+        fble::to_bv(4, 8, bv);
+        encode::poppt_pge::encode(g, bv);
     }
     else {panic!("encoding mode error");}
 
@@ -44,19 +53,27 @@ pub fn decode(bv: &BitVec, g: &mut Grammar) -> () {
     let mut mode = "";
     let mut mode_number: u32 = 0;
     for i in 0..8 {mode_number <<= 1; if bv[i] {mode_number += 1;}}
-    assert!(mode_number <= 2, "unknown encoding mode");
+    assert!(mode_number <= 4, "unknown encoding mode");
 
     if mode_number == 0 {
-        mode = "u32bits";
-        encode::u32bits::decode(bv, g);
+        mode = "32bit";
+        encode::text_32bit::decode(bv, g);
     }
     else if mode_number == 1 {
-        mode = "fixed";
-        encode::fble::decode(bv, g);
+        mode = "FBLE";
+        encode::text_fble::decode(bv, g);
     }
     else if mode_number == 2 {
-        mode = "POPPT";
-        encode::poppt::decode(bv, g);
+        mode = "Huffman_coding";
+        // encode::text_fble::decode(bv, g);
+    }
+    else if mode_number == 3 {
+        mode = "POPPT+IBLE";
+        encode::poppt_ible::decode(bv, g);
+    }
+    else if mode_number == 4 {
+        mode = "POPPT+PGE";
+        encode::poppt_pge::decode(bv, g);
     }
 
     println!("Encoding mode : {}", mode);
