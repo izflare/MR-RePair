@@ -43,8 +43,8 @@ OPTIONS:
     -i, --input <FILE>         Input sourse file
     -m, --minfreq <INTEGER>    Sets minimum frequency of pairing operation [default: 2]
     -e, --encode <MODE>        Sets encoding mode [default: POPPT]  
-	                           [possible values: u32bits, fixed, POPPT]
+	                           [possible values: 32bit, FBLE, Huffman_coding, POPPT+IBLE, POPPT+PGE]
 ```
 
 The command with `-c` flag produces the compressed file `<FILE>.mrrp`.  
-The command with `-d` flag produces the decompressed file `<FILE>.d`.
+The command with `-d` flag produces the decompressed file `<FILE>.dcp`.
