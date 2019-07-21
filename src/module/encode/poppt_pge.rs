@@ -7,7 +7,7 @@ use super::super::{poppt::*};
 use strlib::fble;
 use strlib::packed_gamma;
 
-pub fn encode(g: &Grammar, bv: &mut BitVec) -> () {
+pub fn encode(g: &Grammar, bv: &mut BitVec, blocksize: u32) -> () {
 
     let mut p: POPPT = POPPT::new();
     g.to_poppt(&mut p);
@@ -16,7 +16,7 @@ pub fn encode(g: &Grammar, bv: &mut BitVec) -> () {
     let mut l: BitVec = BitVec::new();
 
     fble::encode(&p.terminal.iter().map(|x| *x as u32).collect::<Vec<u32>>(), &mut z);
-    packed_gamma::encode(&p.label, 8, &mut l);
+    packed_gamma::encode(&p.label, blocksize, &mut l);
     fble::to_bv(z.len() as u32, 32, bv);
     for b in z {bv.push(b);}
     fble::to_bv(p.bit.len() as u32, 32, bv);
@@ -26,6 +26,7 @@ pub fn encode(g: &Grammar, bv: &mut BitVec) -> () {
     println!("[Result: bit encoding]");
     println!("POPPT bit vec len : {:?}", p.bit.len());
     println!("Label length      : {:?}", p.label.len());
+    println!("Block size        : {:?}", blocksize);
 
 }
 

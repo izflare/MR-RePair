@@ -27,6 +27,7 @@ fn main() {
         .arg(Arg::from_usage("-e --encode [MODE] 'Sets encoding mode'")
              .possible_values(&["32bit", "FBLE", "Huffman_coding", "POPPT+IBLE", "POPPT+PGE"])
              .default_value("POPPT+PGE"))
+        .arg(Arg::from_usage("-b --blocksize [INTEGER] 'Sets block size of PGE'").default_value("8"))
         .arg(Arg::from_usage("-p --print 'Prints the detail of constructed grammar'"))
         .arg(Arg::from_usage("--debug 'Debug mode'"));
         //}}}
@@ -43,6 +44,7 @@ fn main() {
 
         let minfreq = 
                 std::cmp::max(2, match matches.value_of("minfreq") {Some(x) => (*x).parse::<usize>().unwrap(), None => 2,});
+        let blocksize = match matches.value_of("blocksize") {Some(x) => (*x).parse::<u32>().unwrap(), None => 8,};
         let mode = matches.value_of("encode").unwrap();
 
         let mut g: Grammar = Grammar::new();
@@ -61,7 +63,7 @@ fn main() {
 
         // encode
         let mut bv: BitVec = BitVec::new();
-        encode::encode(&g, mode, &mut bv);
+        encode::encode(&g, mode, &mut bv, blocksize);
 
         // write
         let mut f = BufWriter::new(File::create(matches.value_of("input").unwrap().to_owned()+".mrrp").unwrap());
