@@ -7,7 +7,7 @@ use super::encode;
 use super::{ds::*};
 use super::{cfg::*};
 
-pub fn compress(s: &Vec<u8>, g: &mut Grammar, minfreq: usize, sorting: bool) -> () {
+pub fn compress(s: &Vec<u8>, g: &mut Grammar, minfreq: usize) -> () {
 
     // preprocessing
     let mut a: Vec<Bucket> = vec![Bucket {val: None, prev: None, next: None}; s.len()];
@@ -18,10 +18,8 @@ pub fn compress(s: &Vec<u8>, g: &mut Grammar, minfreq: usize, sorting: bool) -> 
 
     // algorithm
     let mut v: usize = g.terminal.len() + 1;
-    let mut init: bool = true;
     loop {
         if f < minfreq {break;}
-        if init && sorting {if let Some(_) = q.top(f) { unsafe {q.sort(f, &a); init = false;}}}
         if let Some(r) = q.top(f) { unsafe {
             // the most frequent bigram
             let bg: Bigram = a.rgh_bg((*r).loc).unwrap();
@@ -229,7 +227,7 @@ pub fn compress(s: &Vec<u8>, g: &mut Grammar, minfreq: usize, sorting: bool) -> 
             v += 1;
             if v >= std::u32::MAX as usize {break;}
         }}
-        else {f -= 1; init = true;}
+        else {f -= 1;}
     }
 
     for c in &a {match (*c).val {Some(x) => g.sequence.push(x), None => ()}}

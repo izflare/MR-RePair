@@ -46,7 +46,7 @@ fn main() {
         let mode = matches.value_of("encode").unwrap();
 
         let mut g: Grammar = Grammar::new();
-        compress::compress(&s, &mut g, minfreq, matches.is_present("sort"));
+        compress::compress(&s, &mut g, minfreq);
 
         let end = start.elapsed();
         println!("[Result: grammar construction]");
